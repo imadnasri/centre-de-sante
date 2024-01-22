@@ -1,3 +1,5 @@
+
+################## You have to Create the tables in Mysql ##########################
 from tkinter import messagebox
 from datetime import datetime
 from tkinter import *
