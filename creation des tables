@@ -1,0 +1,27 @@
+-- Création de la table unite CREATE TABLE unite ( uid INT PRIMARY KEY, nom_unite VARCHAR(255) NOT NULL );
+
+-- Création de la table salle CREATE TABLE salle ( salle_numero INT PRIMARY KEY, unite INT, FOREIGN KEY (unite) REFERENCES unite(uid) );
+
+-- Création de la table medecin CREATE TABLE medecin ( mid INT PRIMARY KEY, nom_medecin VARCHAR(255) NOT NULL, prenom_medecin VARCHAR(255) NOT NULL, specialite VARCHAR(255) NOT NULL, telephone VARCHAR(20), uid INT, FOREIGN KEY (uid) REFERENCES unite(uid) );
+
+-- Création de la table service CREATE TABLE service ( sid INT PRIMARY KEY, nom_service VARCHAR(255) NOT NULL, onumero INT, type VARCHAR(255) NOT NULL, uid INT, FOREIGN KEY (uid) REFERENCES unite(uid) );
+
+-- Création de la table infermier CREATE TABLE infermier ( iid INT PRIMARY KEY, nom_infermier VARCHAR(255) NOT NULL, prenom_infermier VARCHAR(255) NOT NULL, uid INT, FOREIGN KEY (uid) REFERENCES unite(uid) );
+
+-- Création de la table patient CREATE TABLE patient ( pid INT PRIMARY KEY, nom_patient VARCHAR(255) NOT NULL, prenom_patient VARCHAR(255) NOT NULL, date_naissance DATE NOT NULL, couverture_medici VARCHAR(255), lien_de_parente VARCHAR(255), profession VARCHAR(255), niveau_scolaire VARCHAR(255), dnumero INT, FOREIGN KEY (dnumero) REFERENCES dossier(dnumero) );
+
+-- Création de la table dossier CREATE TABLE dossier ( dnumero INT PRIMARY KEY, date_ouverture DATE NOT NULL, dossier_famille INT, uid INT, FOREIGN KEY (uid) REFERENCES unite(uid), FOREIGN KEY (dossier_famille) REFERENCES dossier(dnumero) );
+
+-- Création de la table odonnance CREATE TABLE odonnance ( oid INT PRIMARY KEY, type_analyse VARCHAR(255), type_certificat VARCHAR(255), pid INT, sid INT, iid INT, mid INT, FOREIGN KEY (pid) REFERENCES patient(pid), FOREIGN KEY (sid) REFERENCES service(sid), FOREIGN KEY (iid) REFERENCES infermier(iid), FOREIGN KEY (mid) REFERENCES medecin(mid) );
+
+-- Création de la table medicament CREATE TABLE medicament ( nom_commerciale VARCHAR(255) PRIMARY KEY, date_expiration DATE NOT NULL );
+
+-- Création de la table prendre CREATE TABLE prendre ( pid INT, oid INT, nom_commerciale VARCHAR(255), date DATE NOT NULL, FOREIGN KEY (pid) REFERENCES patient(pid), FOREIGN KEY (oid) REFERENCES odonnance(oid), FOREIGN KEY (nom_commerciale) REFERENCES medicament(nom_commerciale) );
+
+-- Création de la table rendez-vous CREATE TABLE rendez-vous ( rid INT PRIMARY KEY, date_rendez-vous DATE NOT NULL, horaire TIME NOT NULL, uid INT, salle_numero INT, FOREIGN KEY (uid) REFERENCES unite(uid), FOREIGN KEY (salle_numero) REFERENCES salle(salle_numero) );
+
+-- Création de la table appartenir CREATE TABLE appartenir ( uid INT, sid INT, iid INT, mid INT, PRIMARY KEY (uid, sid, iid, mid), FOREIGN KEY (uid) REFERENCES unite(uid), FOREIGN KEY (sid) REFERENCES service(sid), FOREIGN KEY (iid) REFERENCES infermier(iid), FOREIGN KEY (mid) REFERENCES medecin(mid) );
+
+-- Création de la table proposer CREATE TABLE proposer ( pid INT, oid INT, PRIMARY KEY (pid, oid), FOREIGN KEY (pid) REFERENCES patient(pid), FOREIGN KEY (oid) REFERENCES odonnance(oid) );
+
+-- Création de la table donner CREATE TABLE donner ( mid INT, oid INT, PRIMARY KEY (mid, oid), FOREIGN KEY (mid) REFERENCES medecin(mid), FOREIGN KEY (oid) REFERENCES odonnance(oid) );
